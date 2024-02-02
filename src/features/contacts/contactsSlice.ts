@@ -68,6 +68,26 @@ export const contactsSlice = createSlice({
 export const { addContact, deleteContact, updateContact } =
   contactsSlice.actions;
 
+const emptyArray: Contact[] = [];
+
+/**
+ * This selector returns contacts whose names contains the search string
+ * @param state Root state
+ * @param name search string
+ * @returns contacts which contain the search string
+ */
+export const filterContactsByName = (state: RootState, name: string) => {
+  if (name === '') {
+    //Returning an exisitng empty array reference rather than creating new ones every time
+    return emptyArray;
+  }
+  return state.contacts.value.filter(contact => {
+    const contactName =
+      `${contact.first_name} ${contact.last_name}`.toLowerCase();
+    return contactName.includes(name.toLowerCase());
+  });
+};
+
 export const selectContacts = (state: RootState) => state.contacts.value;
 export const selectNextId = (state: RootState) =>
   Math.max(...state.contacts.value.map(contact => contact.id)) + 1;
